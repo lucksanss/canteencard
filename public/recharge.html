@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recharge Balance - Canteen Card</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/funky.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Canteen Card
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/dashboard">
+          <i class="fas fa-home me-1"></i>Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card fade-in-up">
+          <div class="card-header bg-warning text-dark text-center">
+            <i class="fas fa-credit-card fa-2x mb-2"></i>
+            <h4 class="mb-0">💳 Recharge Student Balance</h4>
+            <p class="mb-0 mt-1">Add funds to a student's account</p>
+          </div>
+          <div class="card-body">
+            <form action="/recharge" method="POST">
+              <div class="mb-4">
+                <label for="card_number" class="form-label fw-bold">
+                  <i class="fas fa-id-card me-2"></i>Student Card Number
+                </label>
+                <input type="text" class="form-control form-control-lg" id="card_number" name="card_number" required placeholder="Enter student card number">
+                <div class="form-text">Enter the card number of the student to recharge</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="amount" class="form-label fw-bold">
+                  <i class="fas fa-rupee-sign me-2"></i>Recharge Amount (₹)
+                </label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-lg" id="amount" name="amount" required placeholder="0.00">
+                <div class="form-text">Amount to add to the student's balance</div>
+              </div>
+
+              <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Note:</strong> This will instantly add the specified amount to the student's current balance.
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-warning btn-lg text-dark">
+                  <i class="fas fa-plus-circle me-2"></i>💰 Recharge Balance
+                </button>
+                <a href="/dashboard" class="btn btn-outline-secondary">
+                  <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-4 fade-in-up">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">💡 Pro Tips</h6>
+            <p class="text-muted small mb-0">
+              • Always verify the card number before recharging<br>
+              • Students can check their balance during billing<br>
+              • All recharge transactions are recorded automatically
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

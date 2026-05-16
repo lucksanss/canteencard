@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction History - Canteen Card</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/funky.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Canteen Card
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/dashboard">
+          <i class="fas fa-home me-1"></i>Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="display-5 fw-bold fade-in-up">
+              <i class="fas fa-history text-primary me-3"></i>📊 Transaction History
+            </h1>
+            <p class="text-muted fade-in-up">View all completed transactions and billing records</p>
+          </div>
+          <div class="fade-in-up">
+            <div class="d-flex gap-2 align-items-center">
+              <div class="input-group" style="width: 200px;">
+                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                <input type="date" class="form-control" id="reportDate" value="<%= new Date().toISOString().split('T')[0] %>">
+              </div>
+              <button class="btn btn-success" onclick="exportDailyReport()">
+                <i class="fas fa-file-excel me-2"></i>📊 Export Daily Report
+              </button>
+            </div>
+            <div class="mt-2">
+              <span class="badge bg-primary fs-6 px-3 py-2">
+                <i class="fas fa-receipt me-1"></i><%= transactions.length %> Transactions
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if (transactions.length === 0) { %>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="dashboard-card text-center fade-in-up">
+            <div class="dashboard-icon text-muted mb-3">
+              <i class="fas fa-inbox fa-4x"></i>
+            </div>
+            <h4 class="text-muted">No Transactions Yet</h4>
+            <p class="text-muted mb-0">Start processing bills to see transaction history here!</p>
+            <a href="/billing" class="btn btn-primary mt-3">
+              <i class="fas fa-plus me-1"></i>Start Billing
+            </a>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="card fade-in-up">
+        <div class="card-header bg-gradient-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-list me-2"></i>Recent Transactions
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-dark">
+                <tr>
+                  <th class="border-0">
+                    <i class="fas fa-user me-1"></i>Student
+                  </th>
+                  <th class="border-0">
+                    <i class="fas fa-shopping-bag me-1"></i>Items Purchased
+                  </th>
+                  <th class="border-0">
+                    <i class="fas fa-rupee-sign me-1"></i>Total Amount
+                  </th>
+                  <th class="border-0">
+                    <i class="fas fa-calendar me-1"></i>Date & Time
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% transactions.forEach((t, index) => { %>
+                  <tr class="fade-in-up" style="animation-delay: <%= index * 0.1 %>s">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-circle bg-primary text-white me-3">
+                          <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                          <div class="fw-bold"><%= t.name %></div>
+                          <small class="text-muted">Student</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <% try {
+                        const items = JSON.parse(t.products);
+                        const itemList = Object.entries(items).map(([name, qty]) => `${name} (${qty})`).join(', ');
+                      %>
+                        <span class="badge bg-light text-dark"><%= itemList %></span>
+                      <% } catch(e) { %>
+                        <span class="text-muted">N/A</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <span class="badge bg-success fs-6 px-3 py-2">
+                        <i class="fas fa-rupee-sign me-1"></i>₹<%= t.total %>
+                      </span>
+                    </td>
+                    <td>
+                      <div class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        <%= new Date(t.date).toLocaleDateString() %>
+                        <br>
+                        <small><%= new Date(t.date).toLocaleTimeString() %></small>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="dashboard-card fade-in-up">
+            <div class="row text-center">
+              <div class="col-md-4">
+                <div class="stat-item">
+                  <div class="stat-number text-primary">
+                    <%= transactions.length %>
+                  </div>
+                  <div class="stat-label">Total Transactions</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-item">
+                  <div class="stat-number text-success">
+                    ₹<%= transactions.reduce((sum, t) => sum + parseFloat(t.total), 0).toFixed(2) %>
+                  </div>
+                  <div class="stat-label">Total Revenue</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-item">
+                  <div class="stat-number text-info">
+                    ₹<%= (transactions.reduce((sum, t) => sum + parseFloat(t.total), 0) / transactions.length).toFixed(2) %>
+                  </div>
+                  <div class="stat-label">Average Transaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+  <style>
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .stat-item {
+      padding: 1rem;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .bg-gradient-primary {
+      background: var(--primary-gradient) !important;
+    }
+  </style>
+
+  <script>
+    function exportDailyReport() {
+      const date = document.getElementById('reportDate').value;
+      if (!date) {
+        alert('Please select a date for the report');
+        return;
+      }
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = `/export-daily-report?date=${date}`;
+      link.download = `daily-report-${date}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Student - Canteen Card</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/funky.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Canteen Card
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/dashboard">
+          <i class="fas fa-home me-1"></i>Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card fade-in-up">
+          <div class="card-header bg-primary text-white text-center">
+            <i class="fas fa-user-plus fa-2x mb-2"></i>
+            <h4 class="mb-0">👨‍🎓 Add New Student</h4>
+            <p class="mb-0 mt-1">Create a student account with initial balance</p>
+          </div>
+          <div class="card-body">
+            <form action="/add-student" method="POST">
+              <div class="mb-4">
+                <label for="card_number" class="form-label fw-bold">
+                  <i class="fas fa-id-card me-2"></i>Card Number
+                </label>
+                <input type="text" class="form-control form-control-lg" id="card_number" name="card_number" required placeholder="Enter unique card number (e.g., STU001)">
+                <div class="form-text">This will be used for billing transactions</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="name" class="form-label fw-bold">
+                  <i class="fas fa-user me-2"></i>Student Name
+                </label>
+                <input type="text" class="form-control form-control-lg" id="name" name="name" required placeholder="Enter full name">
+              </div>
+
+              <div class="mb-4">
+                <label for="balance" class="form-label fw-bold">
+                  <i class="fas fa-coins me-2"></i>Initial Balance (₹)
+                </label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-lg" id="balance" name="balance" required placeholder="0.00">
+                <div class="form-text">Starting balance for the student account</div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success btn-lg">
+                  <i class="fas fa-save me-2"></i>💾 Create Student Account
+                </button>
+                <a href="/dashboard" class="btn btn-outline-secondary">
+                  <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-4 fade-in-up">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">💡 Pro Tips</h6>
+            <p class="text-muted small mb-0">
+              • Use unique card numbers for each student<br>
+              • Students can recharge their balance anytime<br>
+              • All transactions are tracked automatically
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

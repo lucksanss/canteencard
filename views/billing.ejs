@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing - Canteen Card</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/funky.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Canteen Card
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/dashboard">
+          <i class="fas fa-home me-1"></i>Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card mb-4 fade-in-up">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+              <i class="fas fa-shopping-cart me-2"></i>🛒 Student Billing System
+            </h4>
+          </div>
+          <div class="card-body">
+            <form id="billingForm" action="/billing" method="POST">
+              <div class="row mb-4">
+                <div class="col-md-8">
+                  <label for="card_number" class="form-label fw-bold">
+                    <i class="fas fa-id-card me-2"></i>Student Card Number
+                  </label>
+                  <input type="text" class="form-control form-control-lg" id="card_number" name="card_number" required placeholder="Enter student card number">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">
+                    <i class="fas fa-wallet me-2"></i>Current Balance
+                  </label>
+                  <button type="button" id="checkBalance" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-search me-1"></i>Check Balance
+                  </button>
+                </div>
+              </div>
+              <div id="balanceDisplay" class="alert alert-info mb-4" style="display: none;">
+                <i class="fas fa-coins me-2"></i>Current Balance: ₹<span id="balanceAmount">0.00</span>
+              </div>
+
+              <h5 class="fw-bold mb-3">
+                <i class="fas fa-utensils me-2"></i>🍽️ Available Products
+              </h5>
+              <div id="products" class="row g-3 mb-4">
+                <% products.forEach(product => { %>
+                  <div class="col-md-6">
+                    <div class="product-item <%= product.quantity === 0 ? 'out-of-stock' : '' %>">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                          <h6 class="fw-bold mb-1 <%= product.quantity === 0 ? 'text-muted' : '' %>">
+                            <%= product.name %>
+                            <% if (product.quantity === 0) { %>
+                              <span class="badge bg-danger ms-2">Out of Stock</span>
+                            <% } %>
+                          </h6>
+                          <p class="text-primary fw-bold mb-1 <%= product.quantity === 0 ? 'text-muted' : '' %>">₹<%= product.price %></p>
+                          <small class="<%= product.quantity === 0 ? 'text-danger' : 'text-muted' %>">
+                            <i class="fas fa-boxes me-1"></i>
+                            <% if (product.quantity === 0) { %>
+                              Out of Stock
+                            <% } else { %>
+                              Available: <%= product.quantity %>
+                            <% } %>
+                          </small>
+                        </div>
+                        <input type="number" min="0" max="<%= product.quantity %>" class="form-control product-qty" data-price="<%= product.price %>" data-name="<%= product.name %>" data-max="<%= product.quantity %>" placeholder="Qty" style="width: 80px;" <%= product.quantity === 0 ? 'disabled' : '' %>>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+
+              <div class="cart-total mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold">
+                    <i class="fas fa-calculator me-2"></i>Total Amount:
+                  </span>
+                  <span class="fw-bold fs-4">₹<span id="total">0.00</span></span>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success btn-lg w-100">
+                <i class="fas fa-credit-card me-2"></i>💳 Complete Transaction
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('checkBalance').addEventListener('click', function() {
+      const card = document.getElementById('card_number').value;
+      if (!card) {
+        alert('Please enter a card number first!');
+        return;
+      }
+
+      this.innerHTML = '<span class="loading"></span> Checking...';
+      this.disabled = true;
+
+      fetch('/check-balance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ card_number: card })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
+        document.getElementById('balanceDisplay').style.display = 'block';
+        document.getElementById('checkBalance').innerHTML = '<i class="fas fa-search me-1"></i>Check Balance';
+        document.getElementById('checkBalance').disabled = false;
+      })
+      .catch(err => {
+        alert('Error checking balance. Please try again.');
+        document.getElementById('checkBalance').innerHTML = '<i class="fas fa-search me-1"></i>Check Balance';
+        document.getElementById('checkBalance').disabled = false;
+      });
+    });
+
+    document.querySelectorAll('.product-qty').forEach(input => {
+      input.addEventListener('input', updateTotal);
+    });
+
+    function updateTotal() {
+      let total = 0;
+      let hasErrors = false;
+      document.querySelectorAll('.product-qty').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        const maxQty = parseInt(input.dataset.max);
+        const price = parseFloat(input.dataset.price);
+
+        // Check if quantity exceeds available stock
+        if (qty > maxQty) {
+          input.classList.add('is-invalid');
+          hasErrors = true;
+        } else {
+          input.classList.remove('is-invalid');
+        }
+
+        total += qty * price;
+      });
+
+      document.getElementById('total').textContent = total.toFixed(2);
+
+      // Enable/disable submit button based on errors
+      const submitBtn = document.querySelector('button[type="submit"]');
+      submitBtn.disabled = hasErrors;
+    }
+
+    document.getElementById('billingForm').addEventListener('submit', function(e) {
+      const products = {};
+      let hasQuantityErrors = false;
+
+      document.querySelectorAll('.product-qty').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        const maxQty = parseInt(input.dataset.max);
+
+        if (qty > 0) {
+          if (qty > maxQty) {
+            hasQuantityErrors = true;
+            input.classList.add('is-invalid');
+          } else {
+            input.classList.remove('is-invalid');
+            products[input.dataset.name] = qty;
+          }
+        }
+      });
+
+      if (hasQuantityErrors) {
+        e.preventDefault();
+        alert('Some products exceed available stock! Please reduce quantities.');
+        return;
+      }
+
+      if (Object.keys(products).length === 0) {
+        e.preventDefault();
+        alert('Please select at least one product!');
+        return;
+      }
+
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'products';
+      hiddenInput.value = JSON.stringify(products);
+      this.appendChild(hiddenInput);
+
+      const totalInput = document.createElement('input');
+      totalInput.type = 'hidden';
+      totalInput.name = 'total';
+      totalInput.value = document.getElementById('total').textContent;
+      this.appendChild(totalInput);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Institution - Canteen Card</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .school-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #2a7fba;
+            font-size: 1.5em;
+        }
+        .school-list {
+            margin-bottom: 20px;
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .school-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        .school-item:hover {
+            background-color: #f8f9fa;
+        }
+        .school-item.active {
+            background-color: #2a7fba;
+            color: white;
+            font-weight: bold;
+        }
+        .school-name {
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .login-link a {
+            color: #2a7fba;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .no-schools {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .add-school-btn {
+            background-color: #2a7fba;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .add-school-btn:hover {
+            background-color: #1a5f8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="school-container">
+        <h2>Select Your School/College</h2>
+        <div class="school-list" id="schoolList">
+            <!-- Schools will be loaded here -->
+            <div class="no-schools" id="noSchoolsMessage">No schools available. Please contact admin.</div>
+        </div>
+        <button id="addSchoolBtn" class="add-school-btn">Create New School</button>
+        <div class="login-link">
+            Already have an account? <a href="/login">Login</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const schoolList = document.getElementById('schoolList');
+            const noSchoolsMessage = document.getElementById('noSchoolsMessage');
+            const addSchoolBtn = document.getElementById('addSchoolBtn');
+
+            // Fetch schools from server
+            fetch('/get-schools')
+                .then(response => response.json())
+                .then(schools => {
+                    if (schools.length > 0) {
+                        noSchoolsMessage.style.display = 'none';
+                        schools.forEach(school => {
+                            const schoolElement = document.createElement('div');
+                            schoolElement.className = 'school-item';
+                            schoolElement.innerHTML = `
+                                <span class="school-name">${school.name}</span>
+                                <span class="school-id" style="display:none;">${school.id}</span>
+                            `;
+                            schoolElement.addEventListener('click', function() {
+                                // Store selected school in session
+                                sessionStorage.setItem('selectedSchoolId', school.id);
+                                sessionStorage.setItem('selectedSchoolName', school.name);
+                                window.location.href = '/login';
+                            });
+                            schoolList.appendChild(schoolElement);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching schools:', error);
+                });
+
+            // Add new school functionality
+            addSchoolBtn.addEventListener('click', function() {
+                const schoolName = prompt('Enter the name of your school/college:');
+                if (schoolName && schoolName.trim()) {
+                    // Add loading indicator
+                    const loadingElement = document.createElement('div');
+                    loadingElement.className = 'school-item';
+                    loadingElement.innerHTML = `
+                        <span class="school-name">Creating school...</span>
+                    `;
+                    schoolList.appendChild(loadingElement);
+
+                    // Send request to create new school
+                    fetch('/create-school', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name: schoolName })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Refresh the school list
+                            fetch('/get-schools')
+                                .then(response => response.json())
+                                .then(schools => {
+                                    schoolList.innerHTML = '';
+                                    if (schools.length > 0) {
+                                        noSchoolsMessage.style.display = 'none';
+                                        schools.forEach(school => {
+                                            const schoolElement = document.createElement('div');
+                                            schoolElement.className = 'school-item';
+                                            schoolElement.innerHTML = `
+                                                <span class="school-name">${school.name}</span>
+                                                <span class="school-id" style="display:none;">${school.id}</span>
+                                            `;
+                                            schoolElement.addEventListener('click', function() {
+                                                // Store selected school in session
+                                                sessionStorage.setItem('selectedSchoolId', school.id);
+                                                sessionStorage.setItem('selectedSchoolName', school.name);
+                                                window.location.href = '/login';
+                                            });
+                                            schoolList.appendChild(schoolElement);
+                                        });
+                                    }
+                                });
+                        } else {
+                            alert(data.message || 'Failed to create school');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating school:', error);
+                        alert('Error creating school. Please try again.');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

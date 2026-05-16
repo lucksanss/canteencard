@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Hostel Canteen</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/funky.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Hostel Canteen - <%= institutionName %>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="/add-student">
+            <i class="fas fa-user-plus me-1"></i>Add Student
+          </a>
+          <a class="nav-link" href="/add-product">
+            <i class="fas fa-plus-circle me-1"></i>Add Product
+          </a>
+          <a class="nav-link" href="/recharge">
+            <i class="fas fa-credit-card me-1"></i>Recharge Balance
+          </a>
+          <a class="nav-link" href="/billing">
+            <i class="fas fa-shopping-cart me-1"></i>Billing
+          </a>
+          <a class="nav-link" href="/history">
+            <i class="fas fa-history me-1"></i>History
+          </a>
+          <a class="nav-link" href="/logout">
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        <h1 class="display-4 fw-bold mb-3 fade-in-up">
+          🎉 Welcome to <span class="text-primary"><%= institutionName %></span> Canteen! 🎉
+        </h1>
+        <p class="lead text-muted fade-in-up">Manage your hostel canteen billing system with style and ease!</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="dashboard-card text-center fade-in-up">
+          <div class="dashboard-icon text-primary">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h5 class="fw-bold">Students</h5>
+          <p class="text-muted mb-3">Manage student accounts and balances</p>
+          <a href="/add-student" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Add Student
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="dashboard-card text-center fade-in-up">
+          <div class="dashboard-icon text-success">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <h5 class="fw-bold">Products</h5>
+          <p class="text-muted mb-3">Add and manage menu items</p>
+          <a href="/add-product" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i>Add Product
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="dashboard-card text-center fade-in-up">
+          <div class="dashboard-icon text-warning">
+            <i class="fas fa-cash-register"></i>
+          </div>
+          <h5 class="fw-bold">Billing</h5>
+          <p class="text-muted mb-3">Process student transactions</p>
+          <a href="/billing" class="btn btn-warning">
+            <i class="fas fa-shopping-cart me-1"></i>Start Billing
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="dashboard-card text-center fade-in-up">
+          <div class="dashboard-icon text-info">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h5 class="fw-bold">Reports</h5>
+          <p class="text-muted mb-3">View transaction history</p>
+          <a href="/history" class="btn btn-info">
+            <i class="fas fa-history me-1"></i>View History
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="dashboard-card fade-in-up">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4 class="fw-bold mb-3">
+                <i class="fas fa-rocket text-primary me-2"></i>Quick Actions
+              </h4>
+              <p class="text-muted mb-0">Need to recharge a student's balance? Use our quick recharge system!</p>
+            </div>
+            <div class="col-md-4 text-center">
+              <a href="/recharge" class="btn btn-secondary btn-lg">
+                <i class="fas fa-credit-card fa-2x me-2"></i>
+                <span class="d-block">Recharge Balance</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
