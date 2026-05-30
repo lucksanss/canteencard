@@ -1,46 +1,1037 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Canteen Card</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/funky.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canteen Card</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f8f7;--surface:#fff;--border:#e5e5e3;--border2:#d0d0ce;
+  --text:#1a1a1a;--text2:#666;--text3:#999;
+  --blue:#1a6ef5;--blue-bg:#eef3fe;--blue-text:#1a4eb5;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-text:#15803d;
+  --red:#dc2626;--red-bg:#fef2f2;--red-text:#b91c1c;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-text:#b45309;
+  --radius:8px;--radius-lg:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:18px 16px 14px;font-size:16px;font-weight:600;border-bottom:1px solid var(--border)}
+.sidebar-logo i{font-size:22px;color:var(--blue)}
+.sidebar-logo span{font-size:12px;color:var(--text2);display:block;font-weight:400}
+.nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);padding:16px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text2);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-size:13px;font-family:inherit;transition:background .1s}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--blue-bg);color:var(--blue-text);font-weight:500}
+.nav-item i{font-size:16px;width:20px}
+.nav-badge{margin-left:auto;background:var(--red-bg);color:var(--red-text);font-size:10px;padding:1px 6px;border-radius:999px;font-weight:600}
+.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding:8px 0}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar h1{font-size:15px;font-weight:600}
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.stat-value{font-size:26px;font-weight:600;line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text);font-family:inherit;white-space:nowrap;transition:background .1s}
+.btn:hover{background:var(--bg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--text);color:#fff;border-color:var(--text)}
+.btn-primary:hover{background:#333}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{border-color:#fca5a5;color:var(--red-text)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-success{border-color:#86efac;color:var(--green-text)}
+.btn-success:hover{background:var(--green-bg)}
+.btn-blue{border-color:#93c5fd;color:var(--blue-text)}
+.btn-blue:hover{background:var(--blue-bg)}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.card-pad{padding:16px 20px}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:14px;font-weight:600}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);background:var(--bg)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafaf9}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
+.badge-success{background:var(--green-bg);color:var(--green-text)}
+.badge-warning{background:var(--amber-bg);color:var(--amber-text)}
+.badge-danger{background:var(--red-bg);color:var(--red-text)}
+.badge-info{background:var(--blue-bg);color:var(--blue-text)}
+.badge-gray{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+
+/* Forms */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,110,245,.1)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:14px;font-weight:600}
+.modal-body{padding:20px}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border)}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:20px}
+.tab{padding:9px 16px;font-size:13px;cursor:pointer;color:var(--text2);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;transition:color .15s}
+.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:slideUp .2s ease}
+.toast-success{background:var(--green-bg);color:var(--green-text);border:1px solid #86efac}
+.toast-error{background:var(--red-bg);color:var(--red-text);border:1px solid #fca5a5}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Auth */
+.auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;width:100%;max-width:380px}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-logo i{font-size:40px;color:var(--blue)}
+.auth-logo h1{font-size:20px;font-weight:700;margin-top:10px}
+.auth-logo p{font-size:13px;color:var(--text2);margin-top:4px}
+.auth-link{background:none;border:none;color:var(--blue);cursor:pointer;font-family:inherit;font-size:13px;padding:0}
+
+/* Products grid */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.product-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;cursor:pointer;text-align:left;font-family:inherit;transition:border-color .15s,box-shadow .15s;position:relative}
+.product-tile:hover:not(:disabled){border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-bg)}
+.product-tile:disabled{opacity:.5;cursor:not-allowed}
+.product-tile .emoji{font-size:26px;margin-bottom:8px;display:block}
+.product-tile .pname{font-size:13px;font-weight:600}
+.product-tile .pprice{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* Alert */
+.alert{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:20px}
+.alert-warning{background:var(--amber-bg);border:1px solid #fde68a;color:var(--amber-text)}
+.alert-info{background:var(--blue-bg);border:1px solid #93c5fd;color:var(--blue-text)}
+
+/* Cart */
+.cart-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.qty-ctrl{display:flex;align-items:center;gap:4px}
+.qty-ctrl button{width:24px;height:24px;border:1px solid var(--border2);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+.qty-ctrl span{width:24px;text-align:center;font-size:13px;font-weight:500}
+
+/* Search */
+.search-wrap{position:relative}
+.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px}
+.search-wrap input{padding-left:32px;width:220px}
+
+/* Spinner */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:16px;color:var(--text2);font-size:14px}
+
+.empty{text-align:center;padding:48px 24px;color:var(--text3)}
+.empty i{font-size:36px;display:block;margin-bottom:12px;opacity:.4}
+
+@media(max-width:640px){
+  .sidebar{width:52px;min-width:52px}
+  .nav-item span,.sidebar-logo .inst-name,.nav-label{display:none}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .form-row,.form-row-3{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="login-card">
-      <div class="login-header">
-        <i class="fas fa-utensils fa-3x mb-3"></i>
-        <h4>🍽️ Canteen Card Login</h4>
-        <p class="mb-0">Welcome back to your canteen management system!</p>
-      </div>
-      <div class="login-body">
-        <form action="/login" method="POST">
-          <div class="mb-4">
-            <label for="email" class="form-label fw-bold">
-              <i class="fas fa-envelope me-2"></i>Email Address
-            </label>
-            <input type="email" class="form-control form-control-lg" id="email" name="email" required placeholder="Enter your email">
-          </div>
-          <div class="mb-4">
-            <label for="password" class="form-label fw-bold">
-              <i class="fas fa-lock me-2"></i>Password
-            </label>
-            <input type="password" class="form-control form-control-lg" id="password" name="password" required placeholder="Enter your password">
-          </div>
-          <button type="submit" class="btn btn-primary w-100 btn-lg mb-3">
-            <i class="fas fa-sign-in-alt me-2"></i>Login to Dashboard
-          </button>
-        </form>
-        <div class="text-center">
-          <a href="/register" class="text-decoration-none">
-            <i class="fas fa-user-plus me-1"></i>Don't have an account? <strong>Register your institution</strong>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="app"></div>
+
+<script>
+// ─── API helper ──────────────────────────────────────────────────────────────
+const api = {
+  async req(method, url, data) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' };
+    if (data) opts.body = JSON.stringify(data);
+    const res = await fetch(url, opts);
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Request failed');
+    return json;
+  },
+  get: (url) => api.req('GET', url),
+  post: (url, d) => api.req('POST', url, d),
+  put: (url, d) => api.req('PUT', url, d),
+  del: (url) => api.req('DELETE', url)
+};
+
+// ─── State ───────────────────────────────────────────────────────────────────
+let state = {
+  user: null, page: 'dashboard',
+  products: [], cards: [], transactions: [], stats: {},
+  modal: null, toast: null, loading: true,
+  search: '', filter: 'All', activeTab: 'instock',
+  cart: [], selectedCard: '',
+  toastTimer: null
+};
+
+function setState(patch) {
+  Object.assign(state, patch);
+  render();
+}
+
+function showToast(msg, type = 'success') {
+  if (state.toastTimer) clearTimeout(state.toastTimer);
+  const timer = setTimeout(() => setState({ toast: null, toastTimer: null }), 2800);
+  setState({ toast: { msg, type }, toastTimer: timer });
+}
+
+// ─── Data loading ─────────────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    const [products, cards, transactions, stats] = await Promise.all([
+      api.get('/api/products'),
+      api.get('/api/cards'),
+      api.get('/api/transactions'),
+      api.get('/api/transactions/stats')
+    ]);
+    setState({ products, cards, transactions, stats, loading: false });
+  } catch (e) {
+    setState({ loading: false });
+  }
+}
+
+async function init() {
+  try {
+    const user = await api.get('/api/auth/me');
+    state.user = user;
+    await loadAll();
+  } catch {
+    state.loading = false;
+  }
+  render();
+}
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+async function login(email, password) {
+  const user = await api.post('/api/auth/login', { email, password });
+  state.user = user.institution;
+  await loadAll();
+  render();
+}
+async function register(name, email, password) {
+  const user = await api.post('/api/auth/register', { name, email, password });
+  state.user = user.institution;
+  await loadAll();
+  render();
+}
+async function logout() {
+  await api.post('/api/auth/logout');
+  state.user = null; state.page = 'dashboard';
+  render();
+}
+
+// ─── Products ─────────────────────────────────────────────────────────────────
+async function saveProduct(data, id) {
+  if (id) {
+    const p = await api.put('/api/products/' + id, data);
+    state.products = state.products.map(x => x.id === p.id ? p : x);
+  } else {
+    const p = await api.post('/api/products', data);
+    state.products = [...state.products, p];
+  }
+  showToast(id ? 'Product updated' : 'Product added');
+  setState({ modal: null });
+}
+async function restockProduct(id, quantity, note) {
+  const r = await api.post('/api/products/' + id + '/restock', { quantity, note });
+  state.products = state.products.map(x => x.id === r.product.id ? r.product : x);
+  showToast(`Added ${r.added} units to stock`);
+  setState({ modal: null });
+}
+async function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  await api.del('/api/products/' + id);
+  state.products = state.products.filter(p => p.id !== id);
+  showToast('Product deleted');
+  render();
+}
+
+// ─── Cards ────────────────────────────────────────────────────────────────────
+async function saveCard(data, id) {
+  if (id) {
+    const c = await api.put('/api/cards/' + id, data);
+    state.cards = state.cards.map(x => x.id === c.id ? c : x);
+  } else {
+    const c = await api.post('/api/cards', data);
+    state.cards = [...state.cards, c];
+  }
+  showToast(id ? 'Card updated' : 'Card created');
+  setState({ modal: null });
+}
+async function topupCard(id, amount, note) {
+  const r = await api.post('/api/cards/' + id + '/topup', { amount, note });
+  state.cards = state.cards.map(c => c.id === r.card.id ? r.card : c);
+  showToast(`₹${amount} added to card`);
+  setState({ modal: null });
+  loadAll();
+}
+async function deleteCard(id) {
+  if (!confirm('Delete this card?')) return;
+  await api.del('/api/cards/' + id);
+  state.cards = state.cards.filter(c => c.id !== id);
+  showToast('Card deleted');
+  render();
+}
+
+// ─── Sell ─────────────────────────────────────────────────────────────────────
+function addToCart(product) {
+  if (product.stock === 0) { showToast('Out of stock!', 'error'); return; }
+  const existing = state.cart.find(c => c.id === product.id);
+  if (existing) {
+    if (existing.qty >= product.stock) { showToast('Not enough stock!', 'error'); return; }
+    state.cart = state.cart.map(c => c.id === product.id ? {...c, qty: c.qty + 1} : c);
+  } else {
+    state.cart = [...state.cart, {...product, qty: 1}];
+  }
+  render();
+}
+function setCartQty(id, q) {
+  if (q <= 0) { state.cart = state.cart.filter(c => c.id !== id); }
+  else {
+    const p = state.products.find(p => p.id === id);
+    if (q > p.stock) { showToast('Not enough stock!', 'error'); return; }
+    state.cart = state.cart.map(c => c.id === id ? {...c, qty: q} : c);
+  }
+  render();
+}
+async function checkout() {
+  const card = state.cards.find(c => c.id == state.selectedCard);
+  if (!card || !state.cart.length) return;
+  const total = state.cart.reduce((a, i) => a + parseFloat(i.price) * i.qty, 0);
+  if (parseFloat(card.balance) < total) { showToast('Insufficient balance!', 'error'); return; }
+  const items = state.cart.map(i => ({ product_id: i.id, quantity: i.qty }));
+  const r = await api.post('/api/transactions/sell', { card_id: state.selectedCard, items });
+  state.cart = [];
+  state.selectedCard = '';
+  showToast(`Sale of ₹${r.total.toFixed(2)} completed!`);
+  await loadAll();
+}
+
+// ─── Render helpers ───────────────────────────────────────────────────────────
+function h(tag, attrs, ...children) {
+  const el = document.createElement(tag);
+  if (attrs) Object.entries(attrs).forEach(([k, v]) => {
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el[k] = v;
+    else if (k === 'disabled') { if (v) el.disabled = true; }
+    else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+    else el.setAttribute(k, v);
+  });
+  children.flat(Infinity).forEach(c => {
+    if (c == null || c === false) return;
+    el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return el;
+}
+function icon(name, extra = '') { const i = document.createElement('i'); i.className = `ti ti-${name}${extra ? ' ' + extra : ''}`; return i; }
+function badge(text, type) { return h('span', { class: `badge badge-${type}` }, text); }
+function btn(label, cls, onclick, iconName) {
+  const b = h('button', { class: `btn ${cls}`, onclick });
+  if (iconName) b.appendChild(icon(iconName));
+  if (label) b.appendChild(document.createTextNode(label));
+  return b;
+}
+
+// ─── Auth Page ────────────────────────────────────────────────────────────────
+function renderAuth() {
+  let mode = 'login';
+  const wrap = h('div', { class: 'auth-page' });
+
+  function buildForm() {
+    wrap.innerHTML = '';
+    const card = h('div', { class: 'auth-card' });
+    const logo = h('div', { class: 'auth-logo' });
+    logo.appendChild(icon('building-store', 'style="font-size:40px;color:var(--blue)"'));
+    logo.appendChild(h('h1', null, 'Canteen Card'));
+    logo.appendChild(h('p', null, mode === 'login' ? 'Sign in to your dashboard' : 'Create your institution account'));
+    card.appendChild(logo);
+
+    const form = h('form', { onsubmit: async e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '...';
+        if (mode === 'login') await login(fd.get('email'), fd.get('password'));
+        else await register(fd.get('name'), fd.get('email'), fd.get('password'));
+      } catch (err) {
+        errDiv.textContent = err.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = mode === 'login' ? 'Login' : 'Create Account';
+      }
+    }});
+
+    const errDiv = h('div', { style: { color: 'var(--red)', fontSize: '12px', marginBottom: '10px' } });
+    form.appendChild(errDiv);
+
+    if (mode === 'register') {
+      const g = h('div', { class: 'form-group' });
+      g.appendChild(h('label', null, 'Institution Name'));
+      g.appendChild(h('input', { type: 'text', name: 'name', placeholder: "e.g. St. Mary's School", required: '' }));
+      form.appendChild(g);
+    }
+    const g1 = h('div', { class: 'form-group' });
+    g1.appendChild(h('label', null, 'Email'));
+    g1.appendChild(h('input', { type: 'email', name: 'email', placeholder: 'admin@school.edu', required: '' }));
+    const g2 = h('div', { class: 'form-group' });
+    g2.appendChild(h('label', null, 'Password'));
+    g2.appendChild(h('input', { type: 'password', name: 'password', placeholder: '••••••••', required: '' }));
+    form.appendChild(g1); form.appendChild(g2);
+
+    const submitBtn = h('button', { type: 'submit', class: 'btn btn-primary', style: { width: '100%', justifyContent: 'center', marginTop: '6px' } }, mode === 'login' ? 'Login' : 'Create Account');
+    form.appendChild(submitBtn);
+    card.appendChild(form);
+
+    const switchP = h('p', { style: { textAlign: 'center', marginTop: '20px', fontSize: '13px', color: 'var(--text2)' } });
+    const switchBtn = h('button', { class: 'auth-link', onclick: () => { mode = mode === 'login' ? 'register' : 'login'; buildForm(); } },
+      mode === 'login' ? 'Register institution' : 'Login');
+    switchP.appendChild(document.createTextNode(mode === 'login' ? "No account? " : "Have an account? "));
+    switchP.appendChild(switchBtn);
+    card.appendChild(switchP);
+    wrap.appendChild(card);
+  }
+
+  buildForm();
+  return wrap;
+}
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const { stats, products, transactions } = state;
+  const low = products.filter(p => p.stock < p.min_stock && p.stock > 0);
+  const out = products.filter(p => p.stock === 0);
+  const div = h('div', null);
+
+  // Stats
+  const grid = h('div', { class: 'stat-grid' });
+  [
+    ['Today\'s Sales', `₹${(stats.todaySales||0).toFixed(0)}`, `${stats.todaySaleCount||0} transactions`],
+    ['Top-ups Today', `₹${(stats.todayTopups||0).toFixed(0)}`, 'Balance loaded'],
+    ['Low Stock', `${stats.lowStockCount||0}`, 'Products below min'],
+    ['Out of Stock', `${stats.outOfStockCount||0}`, 'Need restocking'],
+  ].forEach(([label, val, sub]) => {
+    const c = h('div', { class: 'stat-card' });
+    c.appendChild(h('div', { class: 'stat-label' }, label));
+    c.appendChild(h('div', { class: 'stat-value' }, val));
+    c.appendChild(h('div', { class: 'stat-sub' }, sub));
+    grid.appendChild(c);
+  });
+  div.appendChild(grid);
+
+  if (out.length || low.length) {
+    const al = h('div', { class: 'alert alert-warning' });
+    al.appendChild(icon('alert-triangle'));
+    al.appendChild(h('span', null, `${out.length} out of stock, ${low.length} low stock — `));
+    const lb = btn('View Products', 'btn btn-sm', () => setState({ page: 'products' }));
+    al.appendChild(lb);
+    div.appendChild(al);
+  }
+
+  const grid2 = h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' } });
+
+  // Low stock table
+  const lowCard = h('div', { class: 'card' });
+  const lh = h('div', { class: 'card-pad', style: { borderBottom: '1px solid var(--border)', fontWeight: '600', fontSize: '13px' } }, 'Low / Out of Stock');
+  lowCard.appendChild(lh);
+  if (!low.length && !out.length) {
+    lowCard.appendChild(h('div', { class: 'empty' }, icon('circle-check'), 'All stocked well'));
+  } else {
+    const t = h('table', null);
+    t.appendChild(h('thead', null, h('tr', null, h('th', null, 'Product'), h('th', null, 'Stock'), h('th', null, ''))));
+    const tb = h('tbody', null);
+    [...out, ...low].forEach(p => {
+      const rb = btn('Restock', 'btn btn-sm btn-success', () => setState({ modal: { type: 'restock', product: p } }), 'package-import');
+      const tr = h('tr', null,
+        h('td', null, h('span', { style: { marginRight: '6px' } }, p.emoji || '🍽️'), p.name),
+        h('td', null, h('span', { style: { color: p.stock === 0 ? 'var(--red)' : 'var(--amber)', fontWeight: '600' } }, String(p.stock))),
+        h('td', null, rb)
+      );
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    lowCard.appendChild(t);
+  }
+  grid2.appendChild(lowCard);
+
+  // Recent transactions
+  const txnCard = h('div', { class: 'card' });
+  txnCard.appendChild(h('div', { class: 'card-pad', style: { borderBottom: '1px solid var(--border)', fontWeight: '600', fontSize: '13px' } }, 'Recent Transactions'));
+  if (!transactions.length) {
+    txnCard.appendChild(h('div', { class: 'empty' }, icon('list'), 'No transactions yet'));
+  } else {
+    const t = h('table', null);
+    t.appendChild(h('thead', null, h('tr', null, h('th', null, 'Student'), h('th', null, 'Type'), h('th', null, 'Amount'))));
+    const tb = h('tbody', null);
+    transactions.slice(0, 8).forEach(tx => {
+      tb.appendChild(h('tr', null,
+        h('td', null, tx.student_name),
+        h('td', null, badge(tx.type, tx.type === 'sale' ? 'info' : 'success')),
+        h('td', null, h('span', { style: { fontWeight: '600' } }, `₹${parseFloat(tx.amount).toFixed(0)}`))
+      ));
+    });
+    t.appendChild(tb);
+    txnCard.appendChild(t);
+  }
+  grid2.appendChild(txnCard);
+  div.appendChild(grid2);
+  return div;
+}
+
+// ─── Products Page ────────────────────────────────────────────────────────────
+function renderProducts() {
+  const div = h('div', null);
+  const row = h('div', { style: { display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' } });
+
+  const sw = h('div', { class: 'search-wrap' });
+  sw.appendChild(icon('search'));
+  const si = h('input', { type: 'text', placeholder: 'Search products...', value: state.search });
+  si.oninput = e => { state.search = e.target.value; render(); };
+  sw.appendChild(si);
+  row.appendChild(sw);
+
+  const filters = ['All','Food','Beverage','Snack','Stationery','Other','Low Stock','Out of Stock'];
+  const fg = h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } });
+  filters.forEach(f => {
+    fg.appendChild(btn(f, `btn btn-sm${state.filter === f ? ' btn-primary' : ''}`, () => setState({ filter: f })));
+  });
+  row.appendChild(fg);
+  div.appendChild(row);
+
+  const filtered = state.products.filter(p => {
+    const ms = p.name.toLowerCase().includes(state.search.toLowerCase());
+    const mf = state.filter === 'All' ? true
+      : state.filter === 'Low Stock' ? (p.stock < p.min_stock && p.stock > 0)
+      : state.filter === 'Out of Stock' ? p.stock === 0
+      : p.category === state.filter;
+    return ms && mf;
+  });
+
+  const card = h('div', { class: 'card' });
+  if (!filtered.length) {
+    card.appendChild(h('div', { class: 'empty' }, icon('package-off'), 'No products found'));
+  } else {
+    const t = h('table', null);
+    t.appendChild(h('thead', null, h('tr', null,
+      h('th', null, 'Product'), h('th', null, 'Category'), h('th', null, 'Price'),
+      h('th', null, 'Stock'), h('th', null, 'Status'), h('th', null, 'Actions')
+    )));
+    const tb = h('tbody', null);
+    filtered.forEach(p => {
+      const statusBadge = p.stock === 0 ? badge('Out of stock','danger') : p.stock < p.min_stock ? badge('Low stock','warning') : badge('In stock','success');
+      const actions = h('div', { style: { display: 'flex', gap: '6px' } });
+      actions.appendChild(btn('Restock', 'btn btn-sm btn-success', () => setState({ modal: { type: 'restock', product: p } }), 'package-import'));
+      actions.appendChild(btn('', 'btn btn-sm', () => setState({ modal: { type: 'editProduct', product: p } }), 'edit'));
+      actions.appendChild(btn('', 'btn btn-sm btn-danger', () => deleteProduct(p.id), 'trash'));
+
+      const stockColor = p.stock === 0 ? 'var(--red)' : p.stock < p.min_stock ? 'var(--amber)' : 'var(--green)';
+      tb.appendChild(h('tr', null,
+        h('td', null, h('span', { style:{fontSize:'18px',marginRight:'8px'} }, p.emoji||'🍽️'), h('strong', null, p.name)),
+        h('td', null, h('span', { class: 'badge badge-gray' }, p.category)),
+        h('td', null, `₹${parseFloat(p.price).toFixed(2)}`),
+        h('td', null, h('span', { style: { fontWeight: '600', color: stockColor } }, String(p.stock))),
+        h('td', null, statusBadge),
+        h('td', null, actions)
+      ));
+    });
+    t.appendChild(tb);
+    card.appendChild(t);
+  }
+  div.appendChild(card);
+  return div;
+}
+
+// ─── Sell Page ────────────────────────────────────────────────────────────────
+function renderSell() {
+  const inStock = state.products.filter(p => p.stock > 0);
+  const outStock = state.products.filter(p => p.stock === 0);
+  const cart = state.cart;
+  const total = cart.reduce((a, i) => a + parseFloat(i.price) * i.qty, 0);
+  const card = state.cards.find(c => c.id == state.selectedCard);
+
+  const wrap = h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 320px', gap: '20px', alignItems: 'start' } });
+
+  // Products
+  const left = h('div', null);
+  const tabs = h('div', { class: 'tabs' });
+  ['instock','outstock'].forEach((t, i) => {
+    const label = t === 'instock' ? `In Stock (${inStock.length})` : `Out of Stock (${outStock.length})`;
+    tabs.appendChild(h('button', { class: `tab${state.activeTab === t ? ' active' : ''}`, onclick: () => setState({ activeTab: t }) }, label));
+  });
+  left.appendChild(tabs);
+
+  const pg = h('div', { class: 'product-grid' });
+  (state.activeTab === 'instock' ? inStock : outStock).forEach(p => {
+    const tile = h('button', { class: 'product-tile', disabled: p.stock === 0, onclick: () => addToCart(p) });
+    tile.appendChild(h('span', { class: 'emoji' }, p.emoji || '🍽️'));
+    tile.appendChild(h('div', { class: 'pname' }, p.name));
+    tile.appendChild(h('div', { class: 'pprice' }, `₹${parseFloat(p.price).toFixed(0)}`));
+    const sb = badge(`Stock: ${p.stock}`, p.stock === 0 ? 'danger' : p.stock < p.min_stock ? 'warning' : 'success');
+    sb.style.marginTop = '6px';
+    tile.appendChild(sb);
+    pg.appendChild(tile);
+  });
+  left.appendChild(pg);
+  wrap.appendChild(left);
+
+  // Cart
+  const right = h('div', { class: 'card', style: { padding: '16px', position: 'sticky', top: '0' } });
+  right.appendChild(h('div', { style: { fontWeight: '600', fontSize: '14px', marginBottom: '14px' } }, 'Order'));
+
+  const cardGroup = h('div', { class: 'form-group' });
+  cardGroup.appendChild(h('label', null, 'Student Card'));
+  const sel = h('select', { onchange: e => { state.selectedCard = e.target.value; render(); } });
+  sel.appendChild(h('option', { value: '' }, 'Select student...'));
+  state.cards.forEach(c => {
+    const o = h('option', { value: String(c.id) }, `${c.name} — ₹${parseFloat(c.balance).toFixed(0)}`);
+    if (String(c.id) === String(state.selectedCard)) o.selected = true;
+    sel.appendChild(o);
+  });
+  cardGroup.appendChild(sel);
+  if (card) {
+    cardGroup.appendChild(h('div', { style: { fontSize: '12px', marginTop: '4px', color: 'var(--text2)' } },
+      `Balance: ₹${parseFloat(card.balance).toFixed(2)} · ${card.class || ''}`));
+  }
+  right.appendChild(cardGroup);
+
+  const divider = h('hr', { style: { border: 'none', borderTop: '1px solid var(--border)', margin: '14px 0' } });
+  right.appendChild(divider);
+
+  if (!cart.length) {
+    right.appendChild(h('div', { style: { textAlign: 'center', color: 'var(--text3)', fontSize: '13px', padding: '24px 0' } }, 'Tap products to add'));
+  } else {
+    const cartDiv = h('div', null);
+    cart.forEach(item => {
+      const ci = h('div', { class: 'cart-item' });
+      ci.appendChild(h('span', { style: { flex: '1', fontSize: '13px' } }, `${item.emoji || '🍽️'} ${item.name}`));
+      const qc = h('div', { class: 'qty-ctrl' });
+      qc.appendChild(h('button', { onclick: () => setCartQty(item.id, item.qty - 1) }, '−'));
+      qc.appendChild(h('span', null, String(item.qty)));
+      qc.appendChild(h('button', { onclick: () => setCartQty(item.id, item.qty + 1) }, '+'));
+      ci.appendChild(qc);
+      ci.appendChild(h('span', { style: { fontSize: '13px', fontWeight: '600', minWidth: '44px', textAlign: 'right' } }, `₹${(parseFloat(item.price)*item.qty).toFixed(0)}`));
+      const rm = h('button', { class: 'btn btn-sm btn-danger', style: { padding: '3px 7px' }, onclick: () => setCartQty(item.id, 0) });
+      rm.appendChild(icon('x'));
+      ci.appendChild(rm);
+      cartDiv.appendChild(ci);
+    });
+    right.appendChild(cartDiv);
+
+    const totalRow = h('div', { style: { display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '15px', margin: '14px 0' } });
+    totalRow.appendChild(h('span', null, 'Total'));
+    totalRow.appendChild(h('span', null, `₹${total.toFixed(2)}`));
+    right.appendChild(totalRow);
+
+    if (card && parseFloat(card.balance) < total) {
+      right.appendChild(h('div', { style: { color: 'var(--red)', fontSize: '12px', marginBottom: '8px' } }, `Insufficient balance (₹${parseFloat(card.balance).toFixed(2)})`));
+    }
+    const insufficient = !card || parseFloat(card.balance) < total;
+    const payBtn = btn('Complete Sale', `btn btn-primary${insufficient || !state.selectedCard ? '' : ''}`,
+      async () => {
+        try { payBtn.disabled = true; await checkout(); }
+        catch (e) { showToast(e.message, 'error'); payBtn.disabled = false; }
+      }, 'check');
+    payBtn.style.width = '100%';
+    payBtn.style.justifyContent = 'center';
+    if (!state.selectedCard || insufficient) payBtn.disabled = true;
+    right.appendChild(payBtn);
+  }
+
+  wrap.appendChild(right);
+  return wrap;
+}
+
+// ─── Cards Page ───────────────────────────────────────────────────────────────
+function renderCards() {
+  const div = h('div', null);
+  const sw = h('div', { class: 'search-wrap', style: { marginBottom: '16px' } });
+  sw.appendChild(icon('search'));
+  const si = h('input', { type: 'text', placeholder: 'Search students...', value: state.search });
+  si.oninput = e => { state.search = e.target.value; render(); };
+  sw.appendChild(si);
+  div.appendChild(sw);
+
+  const filtered = state.cards.filter(c =>
+    c.name.toLowerCase().includes(state.search.toLowerCase()) ||
+    c.student_id.toLowerCase().includes(state.search.toLowerCase())
+  );
+
+  const card = h('div', { class: 'card' });
+  if (!filtered.length) {
+    card.appendChild(h('div', { class: 'empty' }, icon('credit-card-off'), 'No cards found'));
+  } else {
+    const t = h('table', null);
+    t.appendChild(h('thead', null, h('tr', null,
+      h('th', null, 'Student'), h('th', null, 'ID'), h('th', null, 'Class'),
+      h('th', null, 'RFID'), h('th', null, 'Balance'), h('th', null, 'Actions')
+    )));
+    const tb = h('tbody', null);
+    filtered.forEach(c => {
+      const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      const avatar = h('span', { style: { display:'inline-flex',alignItems:'center',justifyContent:'center',width:'28px',height:'28px',borderRadius:'50%',background:'var(--blue-bg)',color:'var(--blue-text)',fontSize:'11px',fontWeight:'600',marginRight:'8px' } }, initials);
+      const actions = h('div', { style: { display: 'flex', gap: '6px' } });
+      actions.appendChild(btn('Top-up', 'btn btn-sm btn-success', () => setState({ modal: { type: 'topup', card: c } }), 'plus'));
+      actions.appendChild(btn('', 'btn btn-sm', () => setState({ modal: { type: 'editCard', card: c } }), 'edit'));
+      actions.appendChild(btn('', 'btn btn-sm btn-danger', () => deleteCard(c.id), 'trash'));
+      const balanceColor = parseFloat(c.balance) < 50 ? 'var(--red)' : parseFloat(c.balance) < 100 ? 'var(--amber)' : 'var(--text)';
+      tb.appendChild(h('tr', null,
+        h('td', null, avatar, c.name),
+        h('td', null, h('span', { class: 'badge badge-gray' }, c.student_id)),
+        h('td', null, c.class || '—'),
+        h('td', { style: { color: 'var(--text3)', fontSize: '12px' } }, c.rfid || '—'),
+        h('td', null, h('span', { style: { fontWeight: '600', color: balanceColor } }, `₹${parseFloat(c.balance).toFixed(2)}`)),
+        h('td', null, actions)
+      ));
+    });
+    t.appendChild(tb);
+    card.appendChild(t);
+  }
+  div.appendChild(card);
+  return div;
+}
+
+// ─── Transactions Page ────────────────────────────────────────────────────────
+function renderTransactions() {
+  const card = h('div', { class: 'card' });
+  if (!state.transactions.length) {
+    card.appendChild(h('div', { class: 'empty' }, icon('list'), 'No transactions yet'));
+    return card;
+  }
+  const t = h('table', null);
+  t.appendChild(h('thead', null, h('tr', null,
+    h('th', null, 'Date & Time'), h('th', null, 'Student'),
+    h('th', null, 'Type'), h('th', null, 'Items'), h('th', null, 'Amount')
+  )));
+  const tb = h('tbody', null);
+  state.transactions.forEach(tx => {
+    const dt = new Date(tx.created_at);
+    const timeStr = dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short' }) + ' ' + dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    tb.appendChild(h('tr', null,
+      h('td', { style: { color: 'var(--text3)', fontSize: '12px', whiteSpace: 'nowrap' } }, timeStr),
+      h('td', null, tx.student_name),
+      h('td', null, badge(tx.type === 'sale' ? 'Sale' : 'Top-up', tx.type === 'sale' ? 'info' : 'success')),
+      h('td', { style: { fontSize: '12px', color: 'var(--text2)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, tx.items || '—'),
+      h('td', null, h('span', { style: { fontWeight: '600', color: tx.type === 'sale' ? 'var(--text)' : 'var(--green)' } },
+        `${tx.type === 'sale' ? '−' : '+'}₹${parseFloat(tx.amount).toFixed(2)}`))
+    ));
+  });
+  t.appendChild(tb);
+  card.appendChild(t);
+  return card;
+}
+
+// ─── Modals ───────────────────────────────────────────────────────────────────
+function renderModal() {
+  if (!state.modal) return null;
+  const { type } = state.modal;
+  const close = () => setState({ modal: null });
+  const overlay = h('div', { class: 'overlay', onclick: e => { if (e.target === overlay) close(); } });
+
+  let modal;
+  if (type === 'addProduct' || type === 'editProduct') {
+    const editing = type === 'editProduct';
+    const p = editing ? state.modal.product : {};
+    modal = h('div', { class: 'modal' });
+    modal.appendChild(h('div', { class: 'modal-header' },
+      h('span', { class: 'modal-title' }, editing ? 'Edit Product' : 'Add Product'),
+      btn('', 'btn btn-sm', close, 'x')
+    ));
+    const body = h('div', { class: 'modal-body' });
+    const form = h('form', { onsubmit: async e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      try {
+        await saveProduct({ name: fd.get('name'), category: fd.get('category'), price: fd.get('price'), stock: fd.get('stock'), min_stock: fd.get('min_stock'), emoji: fd.get('emoji') }, editing ? p.id : null);
+      } catch(err) { showToast(err.message, 'error'); }
+    }});
+
+    const row1 = h('div', { style: { display: 'grid', gridTemplateColumns: '64px 1fr', gap: '10px', marginBottom: '12px' } });
+    const eg = h('div', { class: 'form-group', style: { margin: '0' } });
+    eg.appendChild(h('label', null, 'Icon'));
+    eg.appendChild(h('input', { type: 'text', name: 'emoji', value: p.emoji || '🍽️', style: { textAlign: 'center', fontSize: '20px' } }));
+    const ng = h('div', { class: 'form-group', style: { margin: '0' } });
+    ng.appendChild(h('label', null, 'Name'));
+    ng.appendChild(h('input', { type: 'text', name: 'name', placeholder: 'Product name', value: p.name || '', required: '' }));
+    row1.appendChild(eg); row1.appendChild(ng);
+    form.appendChild(row1);
+
+    const row2 = h('div', { class: 'form-row' });
+    const cats = ['Food','Beverage','Snack','Stationery','Other'];
+    const catG = h('div', { class: 'form-group' });
+    catG.appendChild(h('label', null, 'Category'));
+    const catSel = h('select', { name: 'category' });
+    cats.forEach(c => {
+      const o = h('option', { value: c }, c);
+      if (c === (p.category || 'Food')) o.selected = true;
+      catSel.appendChild(o);
+    });
+    catG.appendChild(catSel);
+    const priceG = h('div', { class: 'form-group' });
+    priceG.appendChild(h('label', null, 'Price (₹)'));
+    priceG.appendChild(h('input', { type: 'number', name: 'price', placeholder: '0', value: p.price || '', required: '', min: '0', step: '0.01' }));
+    row2.appendChild(catG); row2.appendChild(priceG);
+    form.appendChild(row2);
+
+    const row3 = h('div', { class: 'form-row' });
+    const stG = h('div', { class: 'form-group' });
+    stG.appendChild(h('label', null, 'Stock'));
+    stG.appendChild(h('input', { type: 'number', name: 'stock', placeholder: '0', value: p.stock !== undefined ? p.stock : '', min: '0' }));
+    const msG = h('div', { class: 'form-group' });
+    msG.appendChild(h('label', null, 'Min Stock Alert'));
+    msG.appendChild(h('input', { type: 'number', name: 'min_stock', placeholder: '5', value: p.min_stock || '5', min: '0' }));
+    row3.appendChild(stG); row3.appendChild(msG);
+    form.appendChild(row3);
+
+    body.appendChild(form);
+    modal.appendChild(body);
+    modal.appendChild(h('div', { class: 'modal-footer' },
+      btn('Cancel', 'btn', close),
+      btn(editing ? 'Save Changes' : 'Add Product', 'btn btn-primary', () => form.requestSubmit(), editing ? 'check' : 'plus')
+    ));
+
+  } else if (type === 'restock') {
+    const p = state.modal.product;
+    modal = h('div', { class: 'modal' });
+    modal.appendChild(h('div', { class: 'modal-header' },
+      h('span', { class: 'modal-title' }, `Restock: ${p.emoji || ''} ${p.name}`),
+      btn('', 'btn btn-sm', close, 'x')
+    ));
+    const body = h('div', { class: 'modal-body' });
+    const info = h('div', { style: { background: 'var(--bg)', borderRadius: 'var(--radius)', padding: '10px 12px', marginBottom: '14px', fontSize: '13px' } });
+    info.appendChild(document.createTextNode('Current stock: '));
+    info.appendChild(h('strong', { style: { color: p.stock === 0 ? 'var(--red)' : 'var(--text)' } }, String(p.stock)));
+    if (p.stock === 0) info.appendChild(badge(' Out of stock', 'danger'));
+    body.appendChild(info);
+
+    const qg = h('div', { class: 'form-group' });
+    qg.appendChild(h('label', null, 'Units to Add'));
+    const qi = h('input', { type: 'number', placeholder: 'e.g. 50', min: '1' });
+    qg.appendChild(qi);
+    body.appendChild(qg);
+
+    const preview = h('div', { style: { fontSize: '13px', color: 'var(--text2)', marginBottom: '14px', minHeight: '20px' } });
+    qi.oninput = () => {
+      const v = parseInt(qi.value);
+      preview.innerHTML = v > 0 ? `New stock will be: <strong style="color:var(--green)">${p.stock + v}</strong>` : '';
+    };
+    body.appendChild(preview);
+
+    const ng = h('div', { class: 'form-group' });
+    ng.appendChild(h('label', null, 'Note (optional)'));
+    const ni = h('input', { type: 'text', placeholder: 'e.g. Supplier delivery' });
+    ng.appendChild(ni);
+    body.appendChild(ng);
+
+    modal.appendChild(body);
+    modal.appendChild(h('div', { class: 'modal-footer' },
+      btn('Cancel', 'btn', close),
+      btn('Add Stock', 'btn btn-primary', async () => {
+        const qty = parseInt(qi.value);
+        if (!qty || qty <= 0) return;
+        try { await restockProduct(p.id, qty, ni.value); }
+        catch(e) { showToast(e.message, 'error'); }
+      }, 'package-import')
+    ));
+
+  } else if (type === 'addCard' || type === 'editCard') {
+    const editing = type === 'editCard';
+    const c = editing ? state.modal.card : {};
+    modal = h('div', { class: 'modal' });
+    modal.appendChild(h('div', { class: 'modal-header' },
+      h('span', { class: 'modal-title' }, editing ? 'Edit Card' : 'New Student Card'),
+      btn('', 'btn btn-sm', close, 'x')
+    ));
+    const body = h('div', { class: 'modal-body' });
+    const form = h('form', { onsubmit: async e => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      try { await saveCard({ student_id: fd.get('student_id'), name: fd.get('name'), class: fd.get('class'), rfid: fd.get('rfid'), balance: fd.get('balance') }, editing ? c.id : null); }
+      catch(err) { showToast(err.message, 'error'); }
+    }});
+    const r1 = h('div', { class: 'form-row' });
+    const nameG = h('div', { class: 'form-group' }); nameG.appendChild(h('label', null, 'Student Name')); nameG.appendChild(h('input', { type:'text', name:'name', placeholder:'Full name', value: c.name||'', required:'' }));
+    const sidG = h('div', { class: 'form-group' }); sidG.appendChild(h('label', null, 'Student ID')); sidG.appendChild(h('input', { type:'text', name:'student_id', placeholder:'e.g. S004', value: c.student_id||'', required:'' }));
+    r1.appendChild(nameG); r1.appendChild(sidG);
+    const r2 = h('div', { class: 'form-row' });
+    const clsG = h('div', { class: 'form-group' }); clsG.appendChild(h('label', null, 'Class')); clsG.appendChild(h('input', { type:'text', name:'class', placeholder:'e.g. 10-A', value: c.class||'' }));
+    const rfidG = h('div', { class: 'form-group' }); rfidG.appendChild(h('label', null, 'RFID')); rfidG.appendChild(h('input', { type:'text', name:'rfid', placeholder:'RF code', value: c.rfid||'' }));
+    r2.appendChild(clsG); r2.appendChild(rfidG);
+    const balG = h('div', { class: 'form-group' }); balG.appendChild(h('label', null, editing ? 'Balance (view only)' : 'Initial Balance (₹)')); 
+    const balInput = h('input', { type:'number', name:'balance', placeholder:'0', value: c.balance||'0', min:'0', step:'0.01' });
+    if (editing) balInput.readOnly = true;
+    balG.appendChild(balInput);
+    form.appendChild(r1); form.appendChild(r2); form.appendChild(balG);
+    body.appendChild(form);
+    modal.appendChild(body);
+    modal.appendChild(h('div', { class: 'modal-footer' },
+      btn('Cancel', 'btn', close),
+      btn(editing ? 'Save' : 'Create Card', 'btn btn-primary', () => form.requestSubmit(), editing ? 'check' : 'credit-card')
+    ));
+
+  } else if (type === 'topup') {
+    const c = state.modal.card;
+    modal = h('div', { class: 'modal' });
+    modal.appendChild(h('div', { class: 'modal-header' },
+      h('span', { class: 'modal-title' }, `Top-up: ${c.name}`),
+      btn('', 'btn btn-sm', close, 'x')
+    ));
+    const body = h('div', { class: 'modal-body' });
+    body.appendChild(h('div', { style: { background: 'var(--bg)', borderRadius: 'var(--radius)', padding: '10px 12px', marginBottom: '14px', fontSize: '13px' } },
+      'Current balance: ', h('strong', null, `₹${parseFloat(c.balance).toFixed(2)}`)));
+    const ag = h('div', { class: 'form-group' });
+    ag.appendChild(h('label', null, 'Amount to Add (₹)'));
+    const ai = h('input', { type: 'number', placeholder: 'e.g. 200', min: '1', step: '0.01' });
+    ag.appendChild(ai);
+    body.appendChild(ag);
+
+    const quickRow = h('div', { style: { display: 'flex', gap: '6px', marginBottom: '14px' } });
+    [50, 100, 200, 500].forEach(v => {
+      quickRow.appendChild(btn(`+₹${v}`, 'btn btn-sm', () => { ai.value = v; ai.dispatchEvent(new Event('input')); }));
+    });
+    body.appendChild(quickRow);
+
+    const preview = h('div', { style: { fontSize: '13px', color: 'var(--text2)', marginBottom: '14px', minHeight: '20px' } });
+    ai.oninput = () => {
+      const v = parseFloat(ai.value);
+      preview.innerHTML = v > 0 ? `New balance: <strong style="color:var(--green)">₹${(parseFloat(c.balance)+v).toFixed(2)}</strong>` : '';
+    };
+    body.appendChild(preview);
+
+    const ng = h('div', { class: 'form-group' });
+    ng.appendChild(h('label', null, 'Note (optional)'));
+    const ni = h('input', { type: 'text', placeholder: 'e.g. Monthly recharge' });
+    ng.appendChild(ni);
+    body.appendChild(ng);
+
+    modal.appendChild(body);
+    modal.appendChild(h('div', { class: 'modal-footer' },
+      btn('Cancel', 'btn', close),
+      btn('Add Balance', 'btn btn-primary', async () => {
+        const amt = parseFloat(ai.value);
+        if (!amt || amt <= 0) return;
+        try { await topupCard(c.id, amt, ni.value); }
+        catch(e) { showToast(e.message, 'error'); }
+      }, 'plus')
+    ));
+  }
+
+  if (modal) overlay.appendChild(modal);
+  return overlay;
+}
+
+// ─── Main render ──────────────────────────────────────────────────────────────
+function render() {
+  const root = document.getElementById('app');
+  root.innerHTML = '';
+
+  if (state.loading) {
+    const ls = h('div', { class: 'loading-screen' });
+    ls.appendChild(h('div', { class: 'spinner' }));
+    ls.appendChild(h('span', null, 'Loading...'));
+    root.appendChild(ls);
+    return;
+  }
+
+  if (!state.user) {
+    root.appendChild(renderAuth());
+    return;
+  }
+
+  const low = state.products.filter(p => p.stock < p.min_stock);
+  const app = h('div', { class: 'app' });
+
+  // Sidebar
+  const sidebar = h('div', { class: 'sidebar' });
+  const logoDiv = h('div', { class: 'sidebar-logo' });
+  logoDiv.appendChild(icon('building-store'));
+  const lt = h('div', null);
+  lt.appendChild(document.createTextNode('Canteen Card'));
+  lt.appendChild(h('span', { class: 'inst-name' }, state.user.name || ''));
+  logoDiv.appendChild(lt);
+  sidebar.appendChild(logoDiv);
+
+  sidebar.appendChild(h('span', { class: 'nav-label' }, 'Main'));
+  [
+    ['dashboard', 'layout-dashboard', 'Dashboard', 0],
+    ['products', 'package', 'Products', low.length],
+    ['sell', 'shopping-cart', 'Sell', 0],
+    ['cards', 'credit-card', 'Cards', 0],
+    ['transactions', 'list', 'Transactions', 0],
+  ].forEach(([id, ico, label, badgeCount]) => {
+    const btn2 = h('button', { class: `nav-item${state.page === id ? ' active' : ''}`, onclick: () => setState({ page: id, search: '' }) });
+    btn2.appendChild(icon(ico));
+    btn2.appendChild(h('span', null, label));
+    if (badgeCount > 0) btn2.appendChild(h('span', { class: 'nav-badge' }, String(badgeCount)));
+    sidebar.appendChild(btn2);
+  });
+
+  sidebar.appendChild(h('div', { class: 'sidebar-footer' }));
+  sidebar.appendChild(h('span', { class: 'nav-label' }, 'Account'));
+  const logoutBtn = h('button', { class: 'nav-item', onclick: async () => { await logout(); } });
+  logoutBtn.appendChild(icon('logout'));
+  logoutBtn.appendChild(h('span', null, 'Logout'));
+  sidebar.appendChild(logoutBtn);
+  app.appendChild(sidebar);
+
+  // Main
+  const main = h('div', { class: 'main' });
+  const topbar = h('div', { class: 'topbar' });
+  const titles = { dashboard: 'Dashboard', products: 'Products & Inventory', sell: 'Point of Sale', cards: 'Student Cards', transactions: 'Transactions' };
+  topbar.appendChild(h('h1', null, titles[state.page] || ''));
+  const actions = h('div', { style: { display: 'flex', gap: '8px' } });
+  if (state.page === 'products') {
+    actions.appendChild(btn('Add Product', 'btn btn-primary btn-sm', () => setState({ modal: { type: 'addProduct' } }), 'plus'));
+  }
+  if (state.page === 'cards') {
+    actions.appendChild(btn('New Card', 'btn btn-primary btn-sm', () => setState({ modal: { type: 'addCard' } }), 'plus'));
+  }
+  topbar.appendChild(actions);
+  main.appendChild(topbar);
+
+  const content = h('div', { class: 'content' });
+  if (state.page === 'dashboard') content.appendChild(renderDashboard());
+  else if (state.page === 'products') content.appendChild(renderProducts());
+  else if (state.page === 'sell') content.appendChild(renderSell());
+  else if (state.page === 'cards') content.appendChild(renderCards());
+  else if (state.page === 'transactions') content.appendChild(renderTransactions());
+  main.appendChild(content);
+  app.appendChild(main);
+  root.appendChild(app);
+
+  const modalEl = renderModal();
+  if (modalEl) root.appendChild(modalEl);
+
+  if (state.toast) {
+    const t = h('div', { class: `toast toast-${state.toast.type}` }, state.toast.msg);
+    root.appendChild(t);
+  }
+}
+
+init();
+</script>
 </body>
 </html>
